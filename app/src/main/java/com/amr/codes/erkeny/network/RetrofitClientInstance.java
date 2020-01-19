@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClientInstance {
 
     private static Retrofit retrofit;
-    private static final String BASE_URL = "http://erkenly.000webhostapp.com/api";
+    private static final String BASE_URL = "http://erkenly.000webhostapp.com/api/";
 
     public static Retrofit getRetrofitInstance() {
         if (retrofit == null) {

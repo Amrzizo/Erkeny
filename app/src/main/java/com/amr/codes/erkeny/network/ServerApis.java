@@ -15,12 +15,12 @@ import retrofit2.http.POST;
 
 public interface ServerApis {
 
-    @POST("/login")
+    @POST("login")
     Call<LoginResponse> login( @Body Object loginRequestBody, @HeaderMap Map<String, String> headers);
 
-    @GET("/register/client")
+    @GET("register/client")
     Call<ClientRegisterResponse> registerClient(@Body Object clientRegisterBody, @HeaderMap Map<String, String> headers);
 
-    @GET("/register/company")
+    @GET("register/company")
     Call<CompanyRegisterResponse> registerCompany(@Body Object companyRegisterBody, @HeaderMap Map<String, String> headers);
 }

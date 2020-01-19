@@ -21,7 +21,9 @@ import com.amr.codes.erkeny.R;
 import com.amr.codes.erkeny.model.models.User;
 import com.amr.codes.erkeny.views.activities.LoginActivity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**

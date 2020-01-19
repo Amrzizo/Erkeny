@@ -1,4 +1,4 @@
-package com.amr.codes.erkeny.views.activities;
+package com.amr.codes.erkeny.views.activities.base;
 
 
 import android.content.res.Configuration;
@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.amr.codes.erkeny.R;
 import com.amr.codes.erkeny.control.Controller;
+import com.amr.codes.erkeny.views.activities.HomeActivity;
+import com.amr.codes.erkeny.views.activities.LoginActivity;
 import com.amr.codes.erkeny.views.fragments.BaseFragment;
 
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ public class BaseActivity extends AppCompatActivity {
         fragmentList = new ArrayList<>();  // initialization
 
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout =  findViewById(R.id.drawer_layout);
 
         customizeActionBarActions();
         removeToolbarShadow();
@@ -208,7 +210,7 @@ public class BaseActivity extends AppCompatActivity {
 
         } else {
 
-            if (this instanceof LoginActivity) {
+            if (this instanceof LoginActivity || this instanceof HomeActivity) {
                 moveTaskToBack(true);
             } else {
                 super.onBackPressed();

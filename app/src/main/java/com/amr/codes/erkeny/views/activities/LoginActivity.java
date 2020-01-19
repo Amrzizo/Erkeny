@@ -3,6 +3,7 @@ package com.amr.codes.erkeny.views.activities;
 import android.os.Bundle;
 
 import com.amr.codes.erkeny.R;
+import com.amr.codes.erkeny.views.activities.base.BaseActivity;
 import com.amr.codes.erkeny.views.fragments.LoginFragment;
 
 public class LoginActivity extends BaseActivity {
@@ -13,7 +14,7 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setHeaderName(getString(R.string.str_login_header_txt));
+//        setHeaderName(getString(R.string.str_login_header_txt));
         loginFragment = new LoginFragment();
         addFragmentToView(loginFragment);
     }

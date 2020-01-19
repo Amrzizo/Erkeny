@@ -33,7 +33,7 @@ public class BaseRegisterFragment extends BaseFragment {
         viewPager = (CustomViewPager) containerView.findViewById(R.id.two_way_reservation_fragment_viewpager);
         createViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setPagingEnabled(false);
+        viewPager.setPagingEnabled(true);
 
         createTabIcons();
         return containerView;
@@ -49,7 +49,7 @@ public class BaseRegisterFragment extends BaseFragment {
         clientTab.setText(getString(R.string.str_client_registeration_text));
 
         companyTab = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.fragment_tab_header, null);
-        companyTab.setText(getString(R.string.str_client_registeration_text));
+        companyTab.setText(getString(R.string.str_company_registeration_text));
 
         tabLayout.getTabAt(0).setCustomView(clientTab);
         tabLayout.getTabAt(1).setCustomView(companyTab);

@@ -20,6 +20,7 @@ import com.amr.codes.erkeny.model.models.requests.LoginRequest;
 import com.amr.codes.erkeny.model.models.responses.LoginResponse;
 import com.amr.codes.erkeny.network.RetrofitClientInstance;
 import com.amr.codes.erkeny.network.ServerApis;
+import com.amr.codes.erkeny.views.activities.HomeActivity;
 import com.amr.codes.erkeny.views.activities.RegisterActiviy;
 
 import java.util.List;
@@ -27,6 +28,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.amr.codes.erkeny.R.*;
 
 
 public class LoginFragment extends BaseFragment {
@@ -43,13 +46,14 @@ public class LoginFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        loginFragmentView = inflater.inflate(R.layout.fragment_login, container, false);
+        loginFragmentView = inflater.inflate(layout.fragment_login, container, false);
 
 
-        userName = (EditText) loginFragmentView.findViewById(R.id.user_name_edit_txt);
-        password = (EditText) loginFragmentView.findViewById(R.id.password_edit_text);
-        loginButton = (Button) loginFragmentView.findViewById(R.id.login_button);
-        register = (TextView) loginFragmentView.findViewById(R.id.register_txt);
+        userName = (EditText) loginFragmentView.findViewById(id.user_name_edit_txt);
+        password = (EditText) loginFragmentView.findViewById(id.password_edit_text);
+        loginButton = (Button) loginFragmentView.findViewById(id.login_button);
+        register = (TextView) loginFragmentView.findViewById(id.register_txt);
+
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,12 +79,12 @@ public class LoginFragment extends BaseFragment {
         if (userName.getText() == null || userName.
                 getText().toString().equals("")) {
 
-            userName.setError(getString(R.string.str_enter_valid_value));
+            userName.setError(getString(string.str_enter_valid_value));
 
         } else if (password.getText() == null ||
                 password.getText().toString().equals("")) {
 
-            password.setError(getString(R.string.str_enter_valid_value));
+            password.setError(getString(string.str_enter_valid_value));
 
         } else {
             loginRequest = new LoginRequest();
@@ -94,7 +98,7 @@ public class LoginFragment extends BaseFragment {
 
             } else {
 
-                Toast.makeText(getActivity(), getString(R.string.str_invalid_login_message), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getString(string.str_invalid_login_message), Toast.LENGTH_LONG).show();
             }
         }
 
@@ -104,7 +108,7 @@ public class LoginFragment extends BaseFragment {
     private void sendRequest(LoginRequest loginRequest) {
 
         progressDoalog = new ProgressDialog(getActivity());
-        progressDoalog.setMessage("Loading....");
+        progressDoalog.setMessage(getString(string.str_progress_loading_message));
         progressDoalog.show();
 
         ServerApis service = RetrofitClientInstance.getRetrofitInstance().create(ServerApis.class);
@@ -118,6 +122,9 @@ public class LoginFragment extends BaseFragment {
 
                    String t = response.body().getToken();
                    saveTokenToSharedPreferences(t);
+                   startActivity(new Intent(getActivity(), HomeActivity.class));
+               }else{
+                   Toast.makeText(getActivity(), getString(string.str_inavlid_login_message), Toast.LENGTH_LONG).show();
                }
 
             }
@@ -125,7 +132,7 @@ public class LoginFragment extends BaseFragment {
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
 
-                Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 progressDoalog.dismiss();
             }
         });

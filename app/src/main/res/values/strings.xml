@@ -53,6 +53,10 @@
     <string name="str_login_header_txt">Login</string>
     <string name="str_registeration_header_txt">Registeration</string>
     <string name="title_dialog">GPS settings</string>
+    <string name="str_progress_loading_message">Loading....</string>
+    <string name="str_inavlid_login_message">Invalid UserName or Password</string>
+    <string name="str_home_header_txt">Home</string>
+    <string name="title_activity_garag_map_view_acticity">Map</string>
 
     str_permission_necessary
 

@@ -3,8 +3,8 @@ package com.amr.codes.erkeny.views.activities;
 import android.os.Bundle;
 
 import com.amr.codes.erkeny.R;
+import com.amr.codes.erkeny.views.activities.base.BaseActivity;
 import com.amr.codes.erkeny.views.fragments.BaseRegisterFragment;
-import com.amr.codes.erkeny.views.fragments.ClientRegisterationFragment;
 
 public class RegisterActiviy extends BaseActivity {
 

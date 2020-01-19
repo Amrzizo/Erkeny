@@ -4,7 +4,7 @@
     android:id="@+id/container_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="@color/white">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
@@ -20,6 +20,7 @@
             android:paddingRight="@dimen/margin_2x"
             android:paddingLeft="@dimen/margin_2x"
             android:layout_height="?android:attr/actionBarSize"
+            app:tabTextColor="@color/white"
             app:tabIndicatorColor="@color/tab_indicator_color"
             android:background="@color/colorPrimary"
             app:tabTextAppearance="@style/TabTextAppearance"
