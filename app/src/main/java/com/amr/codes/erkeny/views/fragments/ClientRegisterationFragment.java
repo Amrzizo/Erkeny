@@ -13,10 +13,15 @@ import android.widget.Toast;
 import com.amr.codes.erkeny.R;
 import com.amr.codes.erkeny.control.Controller;
 import com.amr.codes.erkeny.model.models.requests.ClientRegisterRequest;
-import com.amr.codes.erkeny.model.models.responses.ClientRegisterResponse;
+import com.amr.codes.erkeny.model.models.responses.ClientRegisterFailure;
+import com.amr.codes.erkeny.model.models.responses.ClientRegisterSuccess;
+import com.amr.codes.erkeny.model.models.responses.CompanyRegisterResponseFailure;
+import com.amr.codes.erkeny.model.models.responses.CompanyRegisterResponseSuccess;
 import com.amr.codes.erkeny.network.RetrofitClientInstance;
 import com.amr.codes.erkeny.network.ServerApis;
 import com.amr.codes.erkeny.views.activities.LoginActivity;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 import java.util.Map;
 
@@ -40,7 +45,7 @@ public class ClientRegisterationFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragment_map
         registerView = inflater.inflate(R.layout.fragment_client_register,
                 container, false);
 
@@ -100,23 +105,39 @@ public class ClientRegisterationFragment extends BaseFragment {
                     mobile.getText().toString());
 
             ServerApis serverApis = RetrofitClientInstance.getRetrofitInstance().create(ServerApis.class);
-            Call<ClientRegisterResponse> clientResponse = serverApis.registerClient(clientRegisterationRequest, headers);
-            clientResponse.enqueue(new Callback<ClientRegisterResponse>() {
+            Call<JsonElement> clientResponse = serverApis.registerClient(clientRegisterationRequest, headers);
+            clientResponse.enqueue(new Callback<JsonElement>() {
                 @Override
-                public void onResponse(Call<ClientRegisterResponse> call, Response<ClientRegisterResponse> response) {
+                public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
 
                     progressDoalog.dismiss();
                     if (response != null && response.body() != null) {
 
-                        if (response.body().getEmail() != null) {
-                            Toast.makeText(getActivity(), response.body().getEmail().get(0), Toast.LENGTH_LONG).show();
-                        } else if (response.body().getName() != null) {
-                            Toast.makeText(getActivity(), response.body().getName().get(0), Toast.LENGTH_LONG).show();
+                        String result = response.body().toString();
+                        ClientRegisterSuccess responseSuccess = null;
+                        ClientRegisterFailure responseFailure = null;
 
-                        } else if (response.body().getMobile() != null) {
-
-                            Toast.makeText(getActivity(), response.body().getMobile().get(0), Toast.LENGTH_LONG).show();
+                        if (result.contains("created_at")) {
+                            responseSuccess = new Gson().fromJson(result, ClientRegisterSuccess.class);
                         } else {
+
+                            responseFailure = new Gson().fromJson(result, ClientRegisterFailure.class);
+
+                        }
+
+
+                        if(responseFailure != null){
+
+
+                        if (responseFailure.getEmail() != null) {
+                            Toast.makeText(getActivity(), responseFailure.getEmail().get(0), Toast.LENGTH_LONG).show();
+                        } else if (responseFailure.getName() != null) {
+                            Toast.makeText(getActivity(), responseFailure.getName().get(0), Toast.LENGTH_LONG).show();
+
+                        } else if (responseFailure.getMobile() != null) {
+
+                            Toast.makeText(getActivity(), responseFailure.getMobile().get(0), Toast.LENGTH_LONG).show();
+                        }   } else {
 
                             Toast.makeText(getActivity(), getString(R.string.str_registered_successfully), Toast.LENGTH_LONG).show();
 
@@ -128,7 +149,7 @@ public class ClientRegisterationFragment extends BaseFragment {
                 }
 
                 @Override
-                public void onFailure(Call<ClientRegisterResponse> call, Throwable t) {
+                public void onFailure(Call<JsonElement> call, Throwable t) {
 
                     progressDoalog.dismiss();
                     Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_LONG);

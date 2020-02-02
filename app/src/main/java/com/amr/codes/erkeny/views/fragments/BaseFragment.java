@@ -10,8 +10,8 @@ import android.support.v4.app.Fragment;
 public class BaseFragment extends Fragment {
 
     /**
-     * @return true >> the fragment is added not replace  && false>> the fragment is Replaced
-     * getSupportFragmentManager().beginTransaction().[[[[(true>add)//(false>replace)]]]](R.id.fragment_content, fragment, fargmentTag);
+     * @return true >> the fragment_map is added not replace  && false>> the fragment_map is Replaced
+     * getSupportFragmentManager().beginTransaction().[[[[(true>add)//(false>replace)]]]](R.id.fragment_content, fragment_map, fargmentTag);
      */
     public boolean isFragmentAdded() {
         return false;
@@ -19,7 +19,7 @@ public class BaseFragment extends Fragment {
 
     /**
      *
-     * @return true if the fragment has editViews , and you need to show [discard/stay] alert onBackPress.
+     * @return true if the fragment_map has editViews , and you need to show [discard/stay] alert onBackPress.
      *         otherwise return false
      */
     public boolean hasEditableFields(){

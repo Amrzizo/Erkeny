@@ -21,6 +21,7 @@ import com.amr.codes.erkeny.control.Controller;
 import com.amr.codes.erkeny.views.activities.HomeActivity;
 import com.amr.codes.erkeny.views.activities.LoginActivity;
 import com.amr.codes.erkeny.views.fragments.BaseFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +63,7 @@ public class BaseActivity extends AppCompatActivity {
             customizeSideMenu();
 
         }
-        containerFrameLayout = (FrameLayout) findViewById(R.id.container_frame_layout);
+        containerFrameLayout =  findViewById(R.id.container_frame_layout);
     }
 
     public void removeToolbarShadow() {
@@ -99,6 +100,12 @@ public class BaseActivity extends AppCompatActivity {
 
 
         }
+    }
+
+    public void addFragmentToView(SupportMapFragment mapFragment) {
+        getSupportFragmentManager().beginTransaction().
+                add(containerFrameLayout.getId(), mapFragment).commit();
+
     }
 
     private void customizeActionBarActions() {

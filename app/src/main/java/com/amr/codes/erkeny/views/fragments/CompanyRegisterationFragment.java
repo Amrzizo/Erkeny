@@ -15,7 +15,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -30,13 +29,14 @@ import android.widget.Toast;
 
 import com.amr.codes.erkeny.R;
 import com.amr.codes.erkeny.control.Controller;
-import com.amr.codes.erkeny.model.models.requests.ClientRegisterRequest;
 import com.amr.codes.erkeny.model.models.requests.CompanyRegisterRequest;
-import com.amr.codes.erkeny.model.models.responses.ClientRegisterResponse;
-import com.amr.codes.erkeny.model.models.responses.CompanyRegisterResponse;
+import com.amr.codes.erkeny.model.models.responses.CompanyRegisterResponseFailure;
+import com.amr.codes.erkeny.model.models.responses.CompanyRegisterResponseSuccess;
 import com.amr.codes.erkeny.network.RetrofitClientInstance;
 import com.amr.codes.erkeny.network.ServerApis;
 import com.amr.codes.erkeny.views.activities.LoginActivity;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,7 +46,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CompanyRegisterationFragment extends BaseFragment  implements LocationListener {
+public class CompanyRegisterationFragment extends BaseFragment implements LocationListener {
 
     private View companyRegisterationView;
     private EditText name, mobile, password, confirmPassword, email, capacity, price, fromHour, toHour;
@@ -66,7 +66,7 @@ public class CompanyRegisterationFragment extends BaseFragment  implements Locat
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES =  15000; // 1 minute
+    private static final long MIN_TIME_BW_UPDATES = 15000; // 1 minute
 
     // Declaring a Location Manager
     private boolean stopped = false;
@@ -76,7 +76,6 @@ public class CompanyRegisterationFragment extends BaseFragment  implements Locat
 
     private static final int REQUEST_CODE_PERMISSION = 200;
     String locationPermission = Manifest.permission.ACCESS_FINE_LOCATION;
-
 
 
     @Nullable
@@ -148,10 +147,10 @@ public class CompanyRegisterationFragment extends BaseFragment  implements Locat
             fromHour.setError(getString(R.string.str_enter_valid_value));
         } else if (toHour.getText() == null || toHour.getText().toString().equals("")) {
             toHour.setError(getString(R.string.str_enter_valid_value));
-        } else if(location== null) {
+        } else if (location == null) {
 
             getLocation();
-        }else{
+        } else {
 
             companyRegisterRequest = new CompanyRegisterRequest(name.getText().toString(),
                     email.getText().toString(),
@@ -172,35 +171,56 @@ public class CompanyRegisterationFragment extends BaseFragment  implements Locat
 
     private void sendRequest(CompanyRegisterRequest request) {
 
+        request.setImage("data:image/png;base64,"+request.getImage().replace("\n", ""));
+        progressDoalog = new ProgressDialog(getActivity());
+        progressDoalog.setMessage(getString(R.string.str_progress_loading_message));
+        progressDoalog.show();
+
         ServerApis serverApis = RetrofitClientInstance.getRetrofitInstance().create(ServerApis.class);
-        Call<CompanyRegisterResponse> clientResponse = serverApis.registerCompany(request, headers);
-        clientResponse.enqueue(new Callback<CompanyRegisterResponse>() {
+        Call<JsonElement> clientResponse = serverApis.registerCompany(request, headers);
+        clientResponse.enqueue(new Callback<JsonElement>() {
             @Override
-            public void onResponse(Call<CompanyRegisterResponse> call, Response<CompanyRegisterResponse> response) {
+            public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
 
                 progressDoalog.dismiss();
+
                 if (response != null && response.body() != null) {
 
-                    if (response.body().getEmailError() != null) {
-                        Toast.makeText(getActivity(), response.body().getEmailError().get(0), Toast.LENGTH_LONG).show();
-                    } else if (response.body().getHours_fromError() != null) {
-                        Toast.makeText(getActivity(), response.body().getHours_fromError().get(0), Toast.LENGTH_LONG).show();
+                    String result = response.body().toString();
+                    CompanyRegisterResponseFailure responseFailure = null;
+                    CompanyRegisterResponseSuccess responseSuccess = null;
+                    if (result.contains("created_at")) {
+                        responseSuccess = new Gson().fromJson(result, CompanyRegisterResponseSuccess.class);
+                    } else {
 
-                    } else if (response.body().getLat() != null) {
+                        responseFailure = new Gson().fromJson(result, CompanyRegisterResponseFailure.class);
 
-                        Toast.makeText(getActivity(), response.body().getLat().get(0), Toast.LENGTH_LONG).show();
-                    }else if (response.body().getLng() != null) {
+                    }
 
-                        Toast.makeText(getActivity(), response.body().getLng().get(0), Toast.LENGTH_LONG).show();
-                    }else if (response.body().getCapacity() != null) {
+                    if (responseFailure != null) {
 
-                        Toast.makeText(getActivity(), response.body().getCapacity().get(0), Toast.LENGTH_LONG).show();
-                    }else if (response.body().getHour_price() != null) {
+                        if (responseFailure.getEmail() != null) {
+                            Toast.makeText(getActivity(), responseFailure.getEmail().get(0), Toast.LENGTH_LONG).show();
+                        } else if (responseFailure.getHoursFrom() != null) {
+                            Toast.makeText(getActivity(), responseFailure.getHoursFrom().get(0), Toast.LENGTH_LONG).show();
 
-                        Toast.makeText(getActivity(), response.body().getHour_price().get(0), Toast.LENGTH_LONG).show();
-                    }else if (response.body().getHours_toError() != null) {
+                        } else if (responseFailure.getLat() != null) {
 
-                        Toast.makeText(getActivity(), response.body().getHours_toError().get(0), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), responseFailure.getLat().get(0), Toast.LENGTH_LONG).show();
+                        } else if (responseFailure.getLng() != null) {
+
+                            Toast.makeText(getActivity(), responseFailure.getLng().get(0), Toast.LENGTH_LONG).show();
+                        } else if (responseFailure.getCapacity() != null) {
+
+                            Toast.makeText(getActivity(), responseFailure.getCapacity().get(0), Toast.LENGTH_LONG).show();
+                        } else if (responseFailure.getHourPrice() != null) {
+
+                            Toast.makeText(getActivity(), responseFailure.getHoursTo().get(0), Toast.LENGTH_LONG).show();
+                        } else if (responseFailure.getHoursTo() != null) {
+
+                            Toast.makeText(getActivity(), responseFailure.getHoursTo().get(0), Toast.LENGTH_LONG).show();
+
+                        }
                     } else {
 
                         Toast.makeText(getActivity(), getString(R.string.str_registered_successfully), Toast.LENGTH_LONG).show();
@@ -213,7 +233,7 @@ public class CompanyRegisterationFragment extends BaseFragment  implements Locat
             }
 
             @Override
-            public void onFailure(Call<CompanyRegisterResponse> call, Throwable t) {
+            public void onFailure(Call<JsonElement> call, Throwable t) {
 
                 progressDoalog.dismiss();
                 Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_LONG);
@@ -340,7 +360,7 @@ public class CompanyRegisterationFragment extends BaseFragment  implements Locat
                 }
                 break;
 
-            case  REQUEST_CODE_PERMISSION:
+            case REQUEST_CODE_PERMISSION:
                 getLocation();
                 break;
 
@@ -373,12 +393,11 @@ public class CompanyRegisterationFragment extends BaseFragment  implements Locat
 //                        boolean mLocationPermissionGranted = true;
 
 
-
                         if (location == null) {
                             locationManager.requestLocationUpdates(
                                     LocationManager.GPS_PROVIDER,
                                     MIN_TIME_BW_UPDATES,
-                                    MIN_DISTANCE_CHANGE_FOR_UPDATES,  this);
+                                    MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 
 //                                Log.d("GPS Enabled", "GPS Enabled");
 
@@ -409,7 +428,7 @@ public class CompanyRegisterationFragment extends BaseFragment  implements Locat
         return location;
     }
 
-    public void showSettingsAlert(){
+    public void showSettingsAlert() {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
 
@@ -421,7 +440,7 @@ public class CompanyRegisterationFragment extends BaseFragment  implements Locat
 
         // On pressing Settings button
         alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int which) {
+            public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             }
@@ -439,11 +458,10 @@ public class CompanyRegisterationFragment extends BaseFragment  implements Locat
     }
 
 
-
     @Override
     public void onLocationChanged(Location location) {
         this.location = location;
-        Toast.makeText(getActivity(),"location changed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "location changed", Toast.LENGTH_LONG).show();
 
     }
 

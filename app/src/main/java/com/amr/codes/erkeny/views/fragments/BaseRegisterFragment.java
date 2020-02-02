@@ -33,7 +33,7 @@ public class BaseRegisterFragment extends BaseFragment {
         viewPager = (CustomViewPager) containerView.findViewById(R.id.two_way_reservation_fragment_viewpager);
         createViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setPagingEnabled(true);
+        viewPager.setPagingEnabled(false);
 
         createTabIcons();
         return containerView;
@@ -57,7 +57,6 @@ public class BaseRegisterFragment extends BaseFragment {
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
 
             }
 

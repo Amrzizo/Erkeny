@@ -73,7 +73,7 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="center_horizontal|center_vertical"
-                        android:src="@mipmap/about" />
+                        android:src="@drawable/ic_help" />
 
                     <TextView
                         android:id="@+id/about_us_txt"

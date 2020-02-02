@@ -1,10 +1,9 @@
 package com.amr.codes.erkeny.network;
 
-import com.amr.codes.erkeny.model.models.responses.ClientRegisterResponse;
-import com.amr.codes.erkeny.model.models.responses.CompanyRegisterResponse;
+import com.amr.codes.erkeny.model.models.responses.ClientRegisterSuccess;
 import com.amr.codes.erkeny.model.models.responses.LoginResponse;
+import com.google.gson.JsonElement;
 
-import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -18,9 +17,9 @@ public interface ServerApis {
     @POST("login")
     Call<LoginResponse> login( @Body Object loginRequestBody, @HeaderMap Map<String, String> headers);
 
-    @GET("register/client")
-    Call<ClientRegisterResponse> registerClient(@Body Object clientRegisterBody, @HeaderMap Map<String, String> headers);
+    @POST("register/client")
+    Call<JsonElement> registerClient(@Body Object clientRegisterBody, @HeaderMap Map<String, String> headers);
 
-    @GET("register/company")
-    Call<CompanyRegisterResponse> registerCompany(@Body Object companyRegisterBody, @HeaderMap Map<String, String> headers);
+    @POST("register/company")
+    Call<JsonElement> registerCompany(@Body Object companyRegisterBody, @HeaderMap Map<String, String> headers);
 }

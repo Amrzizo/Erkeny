@@ -45,7 +45,7 @@ public class LoginFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragment_map
         loginFragmentView = inflater.inflate(layout.fragment_login, container, false);
 
 
