@@ -109,6 +109,7 @@ public class LoginFragment extends BaseFragment {
 
         progressDoalog = new ProgressDialog(getActivity());
         progressDoalog.setMessage(getString(string.str_progress_loading_message));
+        progressDoalog.setCancelable(false);
         progressDoalog.show();
 
         ServerApis service = RetrofitClientInstance.getRetrofitInstance().create(ServerApis.class);

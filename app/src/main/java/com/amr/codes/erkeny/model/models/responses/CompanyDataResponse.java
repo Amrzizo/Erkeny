@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 
-public class CompaniesResponseSuccess{
+public class CompanyDataResponse{
 
 	@SerializedName("image")
 	private String image;
@@ -54,7 +54,7 @@ public class CompaniesResponseSuccess{
 	@Override
  	public String toString(){
 		return 
-			"CompaniesResponseSuccess{" + 
+			"CompanyDataResponse{" + 
 			"image = '" + image + '\'' + 
 			",user_id = '" + userId + '\'' + 
 			",id = '" + id + '\'' + 

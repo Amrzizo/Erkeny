@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 
 import com.amr.codes.erkeny.R;
 import com.amr.codes.erkeny.model.models.User;
+import com.amr.codes.erkeny.network.RetrofitClientInstance;
+import com.amr.codes.erkeny.network.ServerApis;
 import com.amr.codes.erkeny.views.activities.LoginActivity;
 
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ public class Controller {
 //    private static DBHelper dbHelper;
     private User loggedUser;
     private Activity currentActivity;
+    private ProgressDialog progressDoalog;
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final int MY_PERMISSIONS_REQUEST_OPEN_CAMERA = 124;
     public static final int MY_PERMISSIONS_REQUEST_TELEPHONE_STATE = 125;
@@ -200,4 +204,23 @@ public class Controller {
             return true;
         }
     }
+
+
+
+
+    public void showProgressDialog(Context context) {
+        progressDoalog = new ProgressDialog(context);
+        progressDoalog.setMessage("Loading....");
+        progressDoalog.show();
+    }
+
+
+    public void cancelProgressDialog(){
+        progressDoalog.dismiss();
+    }
+
+    public ServerApis getServerApis() {
+        return RetrofitClientInstance.getRetrofitInstance().create(ServerApis.class);
+    }
+
 }

@@ -2,9 +2,6 @@ package com.amr.codes.erkeny.model.models.responses;
 
 import com.google.gson.annotations.SerializedName;
 
-
-// TODO
-
 public class BranchesItem{
 
 	@SerializedName("hour_price")

@@ -1,5 +1,7 @@
 package com.amr.codes.erkeny.model.models.requests;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class ClientRegisterRequest implements Serializable {

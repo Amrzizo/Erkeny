@@ -1,6 +1,7 @@
 package com.amr.codes.erkeny.views.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -38,7 +39,7 @@ public class ClientRegisterationFragment extends BaseFragment {
     private EditText password, confirmPassword;
     private EditText email;
     private Button registeButton;
-    private ProgressDialog progressDoalog;
+
     private Map<String, String> headers;
 
 
@@ -93,9 +94,7 @@ public class ClientRegisterationFragment extends BaseFragment {
 
         } else {
 
-            progressDoalog = new ProgressDialog(getActivity());
-            progressDoalog.setMessage("Loading....");
-            progressDoalog.show();
+            Controller.getInstance().showProgressDialog(getActivity());
 
             clientRegisterationRequest = new
                     ClientRegisterRequest(name.getText().toString(),
@@ -104,13 +103,13 @@ public class ClientRegisterationFragment extends BaseFragment {
                     confirmPassword.getText().toString(),
                     mobile.getText().toString());
 
-            ServerApis serverApis = RetrofitClientInstance.getRetrofitInstance().create(ServerApis.class);
+            ServerApis serverApis = Controller.getInstance().getServerApis();
             Call<JsonElement> clientResponse = serverApis.registerClient(clientRegisterationRequest, headers);
             clientResponse.enqueue(new Callback<JsonElement>() {
                 @Override
                 public void onResponse(Call<JsonElement> call, Response<JsonElement> response) {
 
-                    progressDoalog.dismiss();
+                    Controller.getInstance().cancelProgressDialog();
                     if (response != null && response.body() != null) {
 
                         String result = response.body().toString();
@@ -151,7 +150,7 @@ public class ClientRegisterationFragment extends BaseFragment {
                 @Override
                 public void onFailure(Call<JsonElement> call, Throwable t) {
 
-                    progressDoalog.dismiss();
+                    Controller.getInstance().cancelProgressDialog();
                     Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_LONG);
                 }
             });
@@ -159,7 +158,6 @@ public class ClientRegisterationFragment extends BaseFragment {
 
         }
     }
-
 
 
 
