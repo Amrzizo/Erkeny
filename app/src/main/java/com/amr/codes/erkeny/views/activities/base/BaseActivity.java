@@ -29,6 +29,9 @@ import java.util.Locale;
 
 public class BaseActivity extends AppCompatActivity {
 
+
+
+
     private FrameLayout containerFrameLayout;
     private List<BaseFragment> fragmentList;
     private Toolbar toolbar;
