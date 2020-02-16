@@ -6,6 +6,7 @@
 	<string name="str_confirm_password_hint">Confirm Password</string>
 	<string name="str_no_account_txt">Haven\'t account ?</string>
 	<string name="str_register_txt">Register</string>
+	<string name="str_add_new_branch">Add Branch</string>
 
 	<string name="str_login_txt">Login</string>
 	<string name="str_name_hint">Name</string>
@@ -40,6 +41,7 @@
 	<string name="str_phone_state">Phone State permission is required</string>
 	<string name="str_location_access">Phone Location Access is required</string>
 	<string name="str_external_storage">External Storage permission is required</string>
+	<string name="str_no_near_garages">Sorry, There is no near or working Garage near You</string>
 
 	<string name="logout_message">Are you sure you want to Logout?</string>
 	<string name="logout">Logout</string>

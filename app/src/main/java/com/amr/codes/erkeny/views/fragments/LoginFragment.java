@@ -22,6 +22,7 @@ import com.amr.codes.erkeny.network.RetrofitClientInstance;
 import com.amr.codes.erkeny.network.ServerApis;
 import com.amr.codes.erkeny.views.activities.HomeActivity;
 import com.amr.codes.erkeny.views.activities.RegisterActiviy;
+import com.amr.codes.erkeny.views.activities.base.BaseActivity;
 
 import java.util.List;
 
@@ -34,7 +35,6 @@ import static com.amr.codes.erkeny.R.*;
 
 public class LoginFragment extends BaseFragment {
 
-    public  static  String TOKEN = "token_key";
     private View loginFragmentView;
     private EditText userName;
     private EditText password;
@@ -121,36 +121,27 @@ public class LoginFragment extends BaseFragment {
 
                if( response != null && response.body()!=null ) {
 
-                   String t = response.body().getToken();
-                   saveTokenToSharedPreferences(t);
+                   String token = response.body().getToken();
+                   Controller.getInstance().saveTokenToSharedPreferences(token, (BaseActivity) getActivity());
                    startActivity(new Intent(getActivity(), HomeActivity.class));
                }else{
-                   Toast.makeText(getActivity(), getString(string.str_inavlid_login_message), Toast.LENGTH_LONG).show();
+                   Controller.getInstance().showInformationDialog(getActivity(),false, getString(string.str_inavlid_login_message));
+
                }
 
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-
-                Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 progressDoalog.dismiss();
+                Controller.getInstance().showInformationDialog(getActivity(),false,  t.getLocalizedMessage());
+
             }
         });
 
     }
 
-    public void saveTokenToSharedPreferences(String token){
 
-        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(TOKEN, token);
-
-        editor.commit();
-
-
-    }
 
 
 }

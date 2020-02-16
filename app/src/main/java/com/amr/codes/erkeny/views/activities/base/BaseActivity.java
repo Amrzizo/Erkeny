@@ -1,10 +1,12 @@
 package com.amr.codes.erkeny.views.activities.base;
 
 
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -43,6 +45,7 @@ public class BaseActivity extends AppCompatActivity {
     private LinearLayout aboutUs;
     private LinearLayout changeLanguage;
     private LinearLayout logOut;
+    public FloatingActionButton listViewButton;
 
 
     @Override
@@ -64,6 +67,8 @@ public class BaseActivity extends AppCompatActivity {
 
         }
         containerFrameLayout =  findViewById(R.id.container_frame_layout);
+        listViewButton = findViewById(R.id.id_home_list_view_button);
+        showFloatingListViewButton();
     }
 
     public void removeToolbarShadow() {
@@ -282,5 +287,10 @@ public class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Controller.getInstance(this).setCurrentActivity(this);
+    }
+
+    @SuppressLint("RestrictedApi")
+    public void showFloatingListViewButton(){
+        listViewButton.setVisibility(View.GONE);
     }
 }

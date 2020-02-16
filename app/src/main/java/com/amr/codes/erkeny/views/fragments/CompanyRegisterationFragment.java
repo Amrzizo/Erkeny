@@ -100,7 +100,7 @@ public class CompanyRegisterationFragment extends BaseFragment implements Locati
                 selectImage();
             }
         });
-        registeButton = (Button) companyRegisterationView.findViewById(R.id.register_button);
+        registeButton = (Button) companyRegisterationView.findViewById(R.id.add_new_branch_button);
         registeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -236,7 +236,8 @@ public class CompanyRegisterationFragment extends BaseFragment implements Locati
             public void onFailure(Call<JsonElement> call, Throwable t) {
 
                 progressDoalog.dismiss();
-                Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_LONG);
+                Controller.getInstance().showInformationDialog(getActivity(),false,t.getLocalizedMessage());
+
             }
         });
 
@@ -461,7 +462,7 @@ public class CompanyRegisterationFragment extends BaseFragment implements Locati
     @Override
     public void onLocationChanged(Location location) {
         this.location = location;
-        Toast.makeText(getActivity(), "location changed", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getActivity(), "location changed", Toast.LENGTH_LONG).show();
 
     }
 

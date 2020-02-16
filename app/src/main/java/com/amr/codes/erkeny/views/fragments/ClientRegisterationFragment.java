@@ -1,7 +1,5 @@
 package com.amr.codes.erkeny.views.fragments;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,9 +14,6 @@ import com.amr.codes.erkeny.control.Controller;
 import com.amr.codes.erkeny.model.models.requests.ClientRegisterRequest;
 import com.amr.codes.erkeny.model.models.responses.ClientRegisterFailure;
 import com.amr.codes.erkeny.model.models.responses.ClientRegisterSuccess;
-import com.amr.codes.erkeny.model.models.responses.CompanyRegisterResponseFailure;
-import com.amr.codes.erkeny.model.models.responses.CompanyRegisterResponseSuccess;
-import com.amr.codes.erkeny.network.RetrofitClientInstance;
 import com.amr.codes.erkeny.network.ServerApis;
 import com.amr.codes.erkeny.views.activities.LoginActivity;
 import com.google.gson.Gson;
@@ -55,7 +50,7 @@ public class ClientRegisterationFragment extends BaseFragment {
         email = (EditText) registerView.findViewById(R.id.email_editText);
         password = (EditText) registerView.findViewById(R.id.password_editText);
         mobile = (EditText) registerView.findViewById(R.id.hour_price_editText);
-        registeButton = (Button) registerView.findViewById(R.id.register_button);
+        registeButton = (Button) registerView.findViewById(R.id.add_new_branch_button);
         registeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,7 +146,8 @@ public class ClientRegisterationFragment extends BaseFragment {
                 public void onFailure(Call<JsonElement> call, Throwable t) {
 
                     Controller.getInstance().cancelProgressDialog();
-                    Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_LONG);
+                    Controller.getInstance().showInformationDialog(getActivity(),false,t.getLocalizedMessage());
+
                 }
             });
 

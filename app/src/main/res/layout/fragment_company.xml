@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@mipmap/background"
+	tools:context=".views.fragments.CompanyFragment">
+
+
+	<ImageView
+		android:id="@+id/imageView2"
+		android:layout_width="match_parent"
+		android:layout_height="200dp"
+		android:scaleType="fitXY"
+		android:layout_margin="5dp"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		android:src="@mipmap/garage"/>
+
+	<ImageView
+		android:id="@+id/id_add_new_branch"
+		android:layout_width="110dp"
+		android:layout_height="110dp"
+		android:layout_marginStart="50dp"
+		android:layout_marginLeft="50dp"
+		android:layout_marginTop="32dp"
+		android:background="@drawable/circle_background"
+		android:padding="10dp"
+		app:srcCompat="@drawable/add_branch"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+	<TextView
+		android:id="@+id/textView5"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="8dp"
+		android:text="Add Branch"
+		android:textSize="18sp"
+		android:textStyle="bold"
+		android:textColor="@android:color/black"
+		app:layout_constraintEnd_toEndOf="@+id/id_add_new_branch"
+		app:layout_constraintStart_toStartOf="@+id/id_add_new_branch"
+		app:layout_constraintTop_toBottomOf="@+id/id_add_new_branch" />
+
+	<ImageView
+		android:id="@+id/id_change_price"
+		android:layout_width="110dp"
+		android:layout_height="110dp"
+		android:layout_marginEnd="50dp"
+		android:layout_marginRight="50dp"
+		android:background="@drawable/circle_background"
+		android:padding="10dp"
+		app:srcCompat="@drawable/ic_update_price"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="@+id/id_add_new_branch" />
+
+	<TextView
+		android:id="@+id/textView6"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="8dp"
+		android:textSize="18sp"
+		android:textColor="@android:color/black"
+		android:textStyle="bold"
+		android:text="Change Price"
+		app:layout_constraintEnd_toEndOf="@+id/id_change_price"
+		app:layout_constraintStart_toStartOf="@+id/id_change_price"
+		app:layout_constraintTop_toBottomOf="@+id/id_change_price" />
+
+	<ImageView
+		android:id="@+id/id_change_capacity"
+		android:layout_width="110dp"
+		android:layout_height="110dp"
+		android:layout_marginTop="70dp"
+		android:background="@drawable/circle_background"
+		android:padding="10dp"
+		app:layout_constraintStart_toStartOf="@+id/id_add_new_branch"
+		app:layout_constraintTop_toBottomOf="@+id/textView5"
+		app:srcCompat="@drawable/ic_update_capacity" />
+
+	<ImageView
+		android:id="@+id/id_change_hours"
+		android:layout_width="110dp"
+		android:layout_height="110dp"
+		android:padding="10dp"
+		android:layout_marginEnd="50dp"
+		android:layout_marginRight="50dp"
+		android:background="@drawable/circle_background"
+		app:srcCompat="@drawable/ic_change_time"
+		app:layout_constraintBottom_toBottomOf="@+id/id_change_capacity"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="@+id/id_change_capacity" />
+
+	<TextView
+		android:id="@+id/textView7"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="8dp"
+		android:text="Change Capacity"
+		android:textSize="18sp"
+		android:textStyle="bold"
+		android:textColor="@android:color/black"
+		app:layout_constraintEnd_toEndOf="@+id/id_change_capacity"
+		app:layout_constraintStart_toStartOf="@+id/id_change_capacity"
+		app:layout_constraintTop_toBottomOf="@+id/id_change_capacity" />
+
+	<TextView
+		android:id="@+id/textView8"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="8dp"
+		android:text="Change Times"
+		android:textSize="18sp"
+		android:textStyle="bold"
+		android:textColor="@android:color/black"
+		app:layout_constraintEnd_toEndOf="@+id/id_change_hours"
+		app:layout_constraintStart_toStartOf="@+id/id_change_hours"
+		app:layout_constraintTop_toBottomOf="@+id/id_change_hours" />
+</android.support.constraint.ConstraintLayout>

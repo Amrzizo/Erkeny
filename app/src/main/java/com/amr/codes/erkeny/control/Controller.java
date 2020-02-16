@@ -1,6 +1,7 @@
 package com.amr.codes.erkeny.control;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,8 +10,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
+import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -22,7 +29,9 @@ import com.amr.codes.erkeny.R;
 import com.amr.codes.erkeny.model.models.User;
 import com.amr.codes.erkeny.network.RetrofitClientInstance;
 import com.amr.codes.erkeny.network.ServerApis;
+import com.amr.codes.erkeny.views.activities.HomeActivity;
 import com.amr.codes.erkeny.views.activities.LoginActivity;
+import com.amr.codes.erkeny.views.activities.base.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,13 +44,19 @@ import java.util.Map;
 
 public class Controller {
 
-//    private static DBHelper dbHelper;
+    //    private static DBHelper dbHelper;
     private User loggedUser;
     private Activity currentActivity;
     private ProgressDialog progressDoalog;
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final int MY_PERMISSIONS_REQUEST_OPEN_CAMERA = 124;
     public static final int MY_PERMISSIONS_REQUEST_TELEPHONE_STATE = 125;
+    public static String TOKEN = "token_key";
+    private static String PREFERENCE_NAME = "prefrence_name";
+    public static int REQUEST_LOCATION_CODE = 100;
+    public static int MIN_TIME = 60000;
+    public static int MIN_DISTANCE = 100;
+    private boolean GPSEnabled;
 
 
     private static Controller instance;
@@ -59,10 +74,9 @@ public class Controller {
 
         return instance;
     }
+
     private Controller() {
     }
-
-
 
 
     public static void adjustDialogWidth(Context context, Dialog dialog) {
@@ -90,7 +104,7 @@ public class Controller {
 
         ok_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-               activity.startActivity(new Intent(Controller.getInstance().getCurrentActivity(), LoginActivity.class));
+                activity.startActivity(new Intent(Controller.getInstance().getCurrentActivity(), LoginActivity.class));
 
 
                 if (closeActivity) {
@@ -119,6 +133,52 @@ public class Controller {
     }
 
 
+    public void showInformationDialog(final Activity activity, final boolean closeActivity, String messageString) {
+
+        final Dialog innerAlertDialog = new Dialog(activity);
+        innerAlertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        innerAlertDialog.setContentView(R.layout.custom_dialog_layout);
+        adjustDialogWidth(activity, innerAlertDialog);
+        TextView title =  innerAlertDialog
+                .findViewById(R.id.custom_dialog_title_id);
+        title.setText(R.string.app_name);
+        TextView messageTXT = (TextView) innerAlertDialog
+                .findViewById(R.id.custom_dialog_message_id);
+        messageTXT.setText(messageString);
+        innerAlertDialog.setCancelable(false);
+        Button ok_btn = (Button) innerAlertDialog
+                .findViewById(R.id.custom_dialog_okBtn_id);
+        ok_btn.setText(R.string.btn_ok_txt);
+
+        ok_btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                if (closeActivity) {
+                    activity.finish();
+                }
+                innerAlertDialog.dismiss();
+            }
+
+        });
+
+        Button cancel_btn = (Button) innerAlertDialog
+                .findViewById(R.id.custom_dialog_cancelBtn_id);
+        cancel_btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                innerAlertDialog.dismiss();
+
+
+            }
+        });
+
+        ok_btn.setAllCaps(true);
+        cancel_btn.setAllCaps(true);
+
+        innerAlertDialog.show();
+
+    }
+
     public User getLoggedUser() {
         return loggedUser;
     }
@@ -141,8 +201,6 @@ public class Controller {
         header.put("Content-Type", "application/json");
         return header;
     }
-
-
 
 
     public static boolean checkGallaryPermission(final Context context) {
@@ -206,8 +264,6 @@ public class Controller {
     }
 
 
-
-
     public void showProgressDialog(Context context) {
         progressDoalog = new ProgressDialog(context);
         progressDoalog.setMessage("Loading....");
@@ -215,12 +271,88 @@ public class Controller {
     }
 
 
-    public void cancelProgressDialog(){
+    public void cancelProgressDialog() {
         progressDoalog.dismiss();
     }
 
     public ServerApis getServerApis() {
         return RetrofitClientInstance.getRetrofitInstance().create(ServerApis.class);
+    }
+
+    public void saveTokenToSharedPreferences(String token, BaseActivity activity) {
+
+        SharedPreferences preferences = activity.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(TOKEN, token);
+        editor.commit();
+    }
+
+    public String getTokenFromSharedPreferences(BaseActivity activity) {
+
+        SharedPreferences preferences = activity.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        return preferences.getString(TOKEN, "");
+    }
+
+    public void gotoGPSSetting(final Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Gps Settings");
+        builder.setMessage("Gps Provider disabled, Click on settings to enable");
+        builder.setPositiveButton("Setting", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                openGPSSettingScreen(context);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.show();
+    }
+
+    public void openGPSSettingScreen(Context context) {
+
+        Intent settingIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        context.startActivity(settingIntent);
+
+    }
+
+
+    public boolean isPermissionGranted(String permissionName, BaseActivity activity, int requestCode) {
+        if (ContextCompat.checkSelfPermission
+                (activity, permissionName) ==
+                PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            String[] permissions = {permissionName};
+            ActivityCompat.requestPermissions(activity, permissions, requestCode);
+            return false;
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public Location getLocation(Context context) {
+
+        LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+        GPSEnabled = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        if (GPSEnabled) {
+
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, (LocationListener) context);
+
+        } else {
+
+            Controller.getInstance().gotoGPSSetting(context);
+        }
+
+        return manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
     }
 
 }
